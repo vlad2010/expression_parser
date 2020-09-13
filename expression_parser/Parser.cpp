@@ -1,5 +1,5 @@
-#include "parser.h"
-#include "tokenizer.h"
+#include "Parser.h"
+#include "Tokenizer.h"
 
 #include <stdexcept>
 #include <iostream>

@@ -3,8 +3,8 @@
 
 #include <string>
 #include <memory>
-#include "tokenizer.h"
-#include "value.h"
+#include "Tokenizer.h"
+#include "Value.h"
 
 const double PRECISION = 0.000000001;
 

@@ -6,8 +6,8 @@
 #include <iostream>
 #include <vector>
 
-#include "value.h"
-#include "parser.h"
+#include "Value.h"
+#include "Parser.h"
 
 using namespace std;
 
@@ -84,10 +84,6 @@ int main()
     cout << "Tests passed: " << passedTests << endl;
     cout << "Tests failed: " << failedTests << endl;
 
-    while (1)
-    {
-
-    }
 }
 
 bool executeTestCase(TestCase& test)
