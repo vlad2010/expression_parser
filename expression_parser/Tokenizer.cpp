@@ -153,7 +153,7 @@ void Tokenizer::NextToken()
         return;
     }
 
-    // Any number literal
+    // Any numeric literal
     if (isdigit(currentChar) || currentChar == '.')
     {
         // hex literals
@@ -171,7 +171,6 @@ void Tokenizer::NextToken()
         }
 
         // Double or integer literal
-        // var sb = new StringBuilder();
         std::string sb = "";
         bool dotSymbol = false;
         while (isdigit(currentChar) || (!dotSymbol && currentChar == '.'))
@@ -218,14 +217,13 @@ long Tokenizer::GetHexNumber()
         GoToNextChar();
     }
 
-    // dot symbol here is syntax error
+    // dot symbol in hex literal is syntax error
     if (currentChar == '.')
     {
         throw new std::invalid_argument(GetErrorMessage());
     }
 
     return std::stoul(str, nullptr, 16);
-    //return  std::stoi(str);
 }
 
 bool Tokenizer::IsHex(char symbol)
