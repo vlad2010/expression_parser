@@ -24,7 +24,9 @@ enum TokenType
     GreaterOrEqual,
     LessOrEqual,
     Equal,
-    NotEqual
+    NotEqual,
+    Function,
+    Comma
 };
 
 class Tokenizer
@@ -33,6 +35,7 @@ public:
     TokenType tokenType;
     double number = 0.0;
     long longNumber = 0;
+    std::string stringValue;
 
     Tokenizer(std::string expression_);
     Tokenizer(std::string expression_, char tmplate, long templateValue);

@@ -1,11 +1,12 @@
-#include "Parser.h"
-#include "Tokenizer.h"
-
 #include <stdexcept>
 #include <iostream>
 #include <cstdlib>
-#include <stdio.h>    
-#include <math.h>  
+#include <stdio.h>
+#include <math.h>
+
+#include "Parser.h"
+#include "Tokenizer.h"
+#include "Functions.h"
 
 Parser::Parser(std::string& expr)
 {
@@ -17,10 +18,9 @@ Parser::Parser(std::string& expr, char templateSymbol, long templateValue)
     tokenizer = std::make_unique<Tokenizer>(expr, templateSymbol, templateValue);
 }
 
-
 Value Parser::ParseExpression()
 {
-    Value expressionValue = Value();
+    Value expressionValue;
 
     // Start from lowest priority operations
     ParseTernaryOperator(expressionValue);
@@ -43,11 +43,11 @@ void Parser::ParseTernaryOperator(Value& value)
     {
         if (value.type != ValueType::BOOL)
         {
-            // any numeric value means True for Ternary operator.  
+            // any numeric value means True for Ternary operator.
             value.Assign(true);
         }
-        Value positiveBranch = Value();
-        Value negativeBranch = Value();
+        Value positiveBranch;
+        Value negativeBranch;
 
         tokenizer->NextToken();
         ParseTernaryOperator(positiveBranch);
@@ -74,7 +74,7 @@ void Parser::ParseComparison(Value& value)
         TokenType operationtokenType = tokenizer->tokenType;
         tokenizer->NextToken();
 
-        Value rightPart = Value();
+        Value rightPart;
         ParseAddSubtract(rightPart);
 
         if (operationtokenType == TokenType::Less)
@@ -122,7 +122,7 @@ void Parser::ParseAddSubtract(Value& value)
         tokenizer->NextToken();
 
         // Parse the right hand side of the expression
-        Value rightPart = Value();
+        Value rightPart;
         ParseMultiplyDivide(rightPart);
 
         if (value.type == ValueType::BOOL || rightPart.type == ValueType::BOOL)
@@ -141,7 +141,6 @@ void Parser::ParseAddSubtract(Value& value)
     }
 }
 
-
 void Parser::ParseMultiplyDivide(Value& value)
 {
     ParseUnary(value);
@@ -153,7 +152,7 @@ void Parser::ParseMultiplyDivide(Value& value)
         TokenType operationtokenType = tokenizer->tokenType;
         tokenizer->NextToken();
 
-        Value rightPart = Value();
+        Value rightPart;
         ParseUnary(rightPart);
 
         if (value.type == ValueType::BOOL || rightPart.type == ValueType::BOOL)
@@ -197,7 +196,7 @@ void Parser::ParseUnary(Value& value)
     if (tokenizer->tokenType == TokenType::Minus)
     {
         tokenizer->NextToken();
-        Value rightPart = Value();
+        Value rightPart;
         ParseUnary(rightPart);
 
         value.Assign(-rightPart.dValue());
@@ -212,7 +211,7 @@ void Parser::ParsePower(Value& value)
     while (tokenizer->tokenType == TokenType::Power)
     {
         tokenizer->NextToken();
-        Value rightPart = Value();
+        Value rightPart;
         ParseUnary(rightPart);
 
         value.Assign(pow(value.dValue(), rightPart.dValue()));
@@ -233,6 +232,33 @@ void Parser::ParseLeaf(Value& value)
         value.Assign(tokenizer->longNumber);
         tokenizer->NextToken();
         return;
+    }
+
+    if (tokenizer->tokenType == TokenType::Function)
+    {
+        std::string fName = tokenizer->stringValue;
+        tokenizer->NextToken();
+
+        Value argument;
+        ParseTernaryOperator(argument);
+
+        FunctionNumber fNum = Functions::GetFunctionNumber(fName);
+
+        Value result;
+        switch (fNum)
+        {
+            case FunctionNumber::LOG:
+                result.Assign(log(argument.dValue()));
+                return;
+
+            case FunctionNumber::LOG10:
+                result.Assign(log10(argument.dValue()));
+                return;
+
+            case FunctionNumber::LOG2:
+                result.Assign(log2(argument.dValue()));
+                return;
+        }
     }
 
     if (tokenizer->tokenType == TokenType::OpenParens)

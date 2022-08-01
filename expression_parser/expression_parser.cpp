@@ -11,7 +11,7 @@
 
 using namespace std;
 
-// Test case structure 
+// Test case structure
 struct TestCase
 {
     string expression;
@@ -88,7 +88,7 @@ int main()
 
 bool executeTestCase(TestCase& test)
 {
-    try 
+    try
     {
         if (test.templateChar!=0)
         {
@@ -112,7 +112,7 @@ bool executeTestCase(TestCase& test)
 TestCase getTestCaseFromLine(string line)
 {
     TestCase test;
-    
+
     std::vector<string> components = getComponents(line);
     if (components.size() < 2)
     {
@@ -207,7 +207,7 @@ std::vector<string> getComponents(string& str)
 {
     std::vector<string> res;
     stringstream s_stream(str);
-    while (s_stream.good()) 
+    while (s_stream.good())
     {
         string substr;
         getline(s_stream, substr, ',');

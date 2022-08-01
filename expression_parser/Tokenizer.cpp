@@ -74,7 +74,7 @@ void Tokenizer::NextToken()
             tokenType = TokenType::DoubleNumber;
             number = templateValue;
         }
-        else   
+        else
         {
             tokenType = TokenType::Modulus;
         }
@@ -185,6 +185,19 @@ void Tokenizer::NextToken()
         tokenType = TokenType::DoubleNumber;
 
         number = atof(sb.c_str());
+        return;
+    }
+
+    // function names without commas
+    if (isalpha(currentChar))
+    {
+        stringValue = "";
+        while (isalpha(currentChar))
+        {
+            stringValue += currentChar;
+            GoToNextChar();
+        }
+        tokenType = TokenType::Function;
         return;
     }
 
