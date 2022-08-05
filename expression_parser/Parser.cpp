@@ -242,21 +242,24 @@ void Parser::ParseLeaf(Value& value)
         Value argument;
         ParseTernaryOperator(argument);
 
-        FunctionNumber fNum = Functions::GetFunctionNumber(fName);
+        if (isinf(argument.dValue()))
+        {
+            throw new std::invalid_argument("Argument is Nan");
+        }
 
-        Value result;
+        FunctionNumber fNum = Functions::GetFunctionNumber(fName);
         switch (fNum)
         {
             case FunctionNumber::LOG:
-                result.Assign(log(argument.dValue()));
+                value.Assign(log(argument.dValue()));
                 return;
 
             case FunctionNumber::LOG10:
-                result.Assign(log10(argument.dValue()));
+                value.Assign(log10(argument.dValue()));
                 return;
 
             case FunctionNumber::LOG2:
-                result.Assign(log2(argument.dValue()));
+                value.Assign(log2(argument.dValue()));
                 return;
         }
     }

@@ -119,7 +119,7 @@ TestCase getTestCaseFromLine(string line)
         return test;
     }
 
-    bool exceptionExpected = false;
+    test.exceptionExpected = false;
 
     test.expression = components[0];
     test.type = trim(components[1]);

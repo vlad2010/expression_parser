@@ -12,7 +12,7 @@ enum ValueType
 {
     BOOL,
     DOUBLE,
-    LONG
+    LONG  // only double types actually used
 };
 
 class Value

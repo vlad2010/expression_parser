@@ -1,5 +1,29 @@
 #<text expression>, <value type>, <result>, [template symbol], [template value]
 
+# only double numbers are supported
+
+#functions
+
+#Math.log2(Math.log(0)), double, -inf
+Math.log2(Math.log(0)), exception
+
+Math.log2(log10(45)), double, 0.7252721892
+Math.log10(Math.log2(Math.log(123456))), double, 0.5503933144
+log2(100), double, 6.64385619
+Math.log(Math.log(0)), exception
+Math.log10(Math.log(0)), exception
+
+log(0), double, -inf
+log10(0), double, -inf
+log2(0), double, -inf
+
+log(100), double, 4.605170186
+log10(100), double, 2
+log2(100), double, 6.64385619
+log2(log10(45)), double, 0.7252721892
+log10(log2(log(123456))), double, 0.5503933144
+
+
 # numeric literals
 15,double,15
 000007, double,7
@@ -22,7 +46,7 @@
 1.0/3, double, 0.33333333333
 
 # expressions with brackets
-2 + ((28567*3.0+4) / 28657), double, 4.9907178 
+2 + ((28567*3.0+4) / 28657), double, 4.9907178
 
 # modulus operations
 8%3, double, 2
@@ -87,7 +111,7 @@
 4+51<(6 + 1)?6:144, double, 144
 10 < 7 ? 4>8 ? 2:99 : 1<(4 + 9)? 5*2.0: 456, double, 10
 
-# templates 
+# templates
 9%%d, double, 0, d, 3
 10 < %d ? 4>8 ? 2:99 : 1<(4 + 9)? 5*2.0: 456, double, 10, d , 7
 
@@ -158,4 +182,3 @@ abc, exception
 
 ~0xA, exception
 ~0xAA, exception
-       

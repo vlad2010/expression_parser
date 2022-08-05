@@ -188,11 +188,11 @@ void Tokenizer::NextToken()
         return;
     }
 
-    // function names without commas
+    // function names without commas, starts from letter
     if (isalpha(currentChar))
     {
         stringValue = "";
-        while (isalpha(currentChar))
+        while (isalnum(currentChar) || currentChar == '.')
         {
             stringValue += currentChar;
             GoToNextChar();
