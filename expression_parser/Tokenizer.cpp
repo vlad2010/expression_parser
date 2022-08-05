@@ -126,6 +126,11 @@ void Tokenizer::NextToken()
         tokenType = TokenType::TernaryDivider;
         return;
 
+    case ',':
+        GoToNextChar();
+        tokenType = TokenType::Comma;
+        return;
+
     case '=':
         GoToNextChar();
         if (currentChar == '=')

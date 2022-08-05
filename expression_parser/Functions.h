@@ -11,9 +11,17 @@ enum class FunctionNumber
     LOG10,
 };
 
+struct FunctionDescription
+{
+    FunctionNumber id = FunctionNumber::UNDEFINED;
+    std::string name;
+    unsigned int minNumberOfArgs = 0;
+    unsigned int maxNumberOfArgs = 0;
+};
+
 class Functions
 {
 public:
-    static FunctionNumber GetFunctionNumber(const std::string& name);
+    static FunctionDescription GetFunctionDescription(const std::string& name);
 };
 

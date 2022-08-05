@@ -68,6 +68,7 @@ int main()
 
             if (checkResults(test))
             {
+                //cout << "Passed: " << line << endl;
                 passedTests++;
             }
             else
@@ -210,7 +211,7 @@ std::vector<string> getComponents(string& str)
     while (s_stream.good())
     {
         string substr;
-        getline(s_stream, substr, ',');
+        getline(s_stream, substr, ';');
         res.push_back(substr);
     }
 

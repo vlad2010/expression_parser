@@ -3,6 +3,8 @@
 
 #include <string>
 #include <memory>
+#include <vector>
+
 #include "Tokenizer.h"
 #include "Value.h"
 
@@ -25,12 +27,14 @@ private:
     void ParseUnary(Value& value);
     void ParsePower(Value& value);
     void ParseLeaf(Value& value);
+    void ParseBrackets(Value& value);
+    std::vector<Value> ParseFunctionArguments();
 
     bool IsBooleanOperation();
     double RubyMod(double x, double y);
 };
 
 
-#endif 
+#endif
 
 

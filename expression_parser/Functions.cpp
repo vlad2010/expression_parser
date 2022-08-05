@@ -1,22 +1,23 @@
 #include "Functions.h"
 
-constexpr int FUNC_NUMS = 3;
-const char* fnames[FUNC_NUMS] { "log", "log2", "log10" };
-const char* nmSpace = "Math";
+#include <vector>
 
-FunctionNumber Functions::GetFunctionNumber(const std::string& name)
+static std::vector<FunctionDescription> dscs = { {FunctionNumber::LOG, "log", 1, 2}, {FunctionNumber::LOG2, "log2", 1, 1}, {FunctionNumber::LOG10, "log10", 1, 1} };
+static const char* nmSpace = "Math";
+
+FunctionDescription Functions::GetFunctionDescription(const std::string& name)
 {
-    for (int i = 0; i < FUNC_NUMS; i++)
+    for (int i = 0; i < dscs.size(); i++)
     {
         std::string fullName(nmSpace);
         fullName += ".";
-        fullName += fnames[i];
+        fullName += dscs[i].name;
 
-        if (strcmp(fnames[i], name.c_str()) == 0 || fullName == name)
+        if (dscs[i].name == name.c_str() || fullName == name)
         {
-            return (FunctionNumber)i;
+            return dscs[i];
         }
     }
 
-    return FunctionNumber::UNDEFINED;
+    return FunctionDescription();
 }

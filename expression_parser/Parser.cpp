@@ -239,48 +239,99 @@ void Parser::ParseLeaf(Value& value)
         std::string fName = tokenizer->stringValue;
         tokenizer->NextToken();
 
-        Value argument;
-        ParseTernaryOperator(argument);
-
-        if (isinf(argument.dValue()))
+        std::vector<Value> args = ParseFunctionArguments();
+        for (Value& v : args)
         {
-            throw new std::invalid_argument("Argument is Nan");
+            if (isinf(v.dValue()))
+            {
+                throw new std::invalid_argument("Argument is Nan");
+            }
         }
 
-        FunctionNumber fNum = Functions::GetFunctionNumber(fName);
-        switch (fNum)
+        FunctionDescription fNum = Functions::GetFunctionDescription(fName);
+        if (args.size() > fNum.maxNumberOfArgs || args.size() < fNum.minNumberOfArgs)
+        {
+            throw new std::invalid_argument("Invalid number of arguments");
+        }
+
+        switch (fNum.id)
         {
             case FunctionNumber::LOG:
-                value.Assign(log(argument.dValue()));
+                if (args.size() == 1)
+                {
+                    value.Assign(log(args[0].dValue()));
+                }
+                else
+                {
+                    // log(x, base) = log2(x) / log2(base)
+                    value.Assign(log2(args[0].dValue()) / log2(args[1].dValue()));
+                }
                 return;
 
             case FunctionNumber::LOG10:
-                value.Assign(log10(argument.dValue()));
+                value.Assign(log10(args[0].dValue()));
                 return;
 
             case FunctionNumber::LOG2:
-                value.Assign(log2(argument.dValue()));
+                value.Assign(log2(args[0].dValue()));
                 return;
         }
     }
 
     if (tokenizer->tokenType == TokenType::OpenParens)
     {
-        tokenizer->NextToken();
-
-        // Start from the beginning
-        ParseTernaryOperator(value);
-
-        if (tokenizer->tokenType != TokenType::CloseParens)
-        {
-            throw new std::invalid_argument("The closing bracket is missing");
-        }
-        tokenizer->NextToken();
+        ParseBrackets(value);
         return;
     }
 
     throw new std::invalid_argument("Unexpected token when parsing leaf"); // + tokenizer.tokenType
 }
+
+
+std::vector<Value> Parser::ParseFunctionArguments()
+{
+    std::vector<Value> result;
+
+    tokenizer->NextToken();
+
+    Value firstArgument;
+    ParseTernaryOperator(firstArgument);
+    result.push_back(firstArgument);
+
+    while (tokenizer->tokenType == TokenType::Comma)
+    {
+        tokenizer->NextToken();
+        Value argument;
+        ParseTernaryOperator(argument);
+        result.push_back(argument);
+
+        tokenizer->NextToken();
+    }
+
+    if (result.size() <= 1)
+    {
+        tokenizer->NextToken();
+    }
+
+    return result;
+}
+
+
+void Parser::ParseBrackets(Value& value)
+{
+    tokenizer->NextToken();
+
+    // Start from the beginning
+    ParseTernaryOperator(value);
+
+    if (tokenizer->tokenType != TokenType::CloseParens)
+    {
+        throw new std::invalid_argument("The closing bracket is missing");
+    }
+    tokenizer->NextToken();
+    return;
+}
+
 
 
 bool Parser::IsBooleanOperation()
